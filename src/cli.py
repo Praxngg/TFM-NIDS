@@ -77,8 +77,10 @@ def main():
     print(f"[+] Escenario: {args.scenario.upper()}")
     print(f"[+] Evaluación: {args.mode.upper()}" + (" + SMOTE" if args.smote else ""))
 
-    EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir, best_params=best_params)
-
+    if best_params is not None:
+        EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir, best_params=best_params)
+    else:
+        EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir)
 
 if __name__ == "__main__":
     main()
