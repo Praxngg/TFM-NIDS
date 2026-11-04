@@ -175,10 +175,6 @@ def obtener_fold_nb15(root_path='./unsw-nb15/', rep=1, kfold=1, clases_a_elimina
     if k_vecinos < 1:
         k_vecinos = 1
 
-    print(min_clase_size)
-    print(k_vecinos)
-    print(y_train)
-
     smote = SMOTE(random_state=42, k_neighbors=k_vecinos)
     X_train_smote, y_train_smote = smote.fit_resample(X_train_scaled, y_train)
 
