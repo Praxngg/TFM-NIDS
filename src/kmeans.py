@@ -790,7 +790,7 @@ def run_nb15_full_multiclass(data_root="datasets", results_dir="results"):
             total_confusion_matrix += confusion_matrix(y_test_m, y_pred_test_m, labels=CLASSES)
 
             # ======================================================================
-            # BLOQUE 2: PERFILADO Y EXTRACCIÓN DE MÉTRICAS ONE-VS-ALL (NUEVO)
+            # BLOQUE 2: PERFILADO Y EXTRACCIÓN DE MÉTRICAS ONE-VS-ALL
             # ======================================================================
             for target_class in CLASSES:
                 # 2.1 Binarizar temporalmente para evaluar solo la clase objetivo

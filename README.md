@@ -18,6 +18,7 @@ TFM_codigo_PraxedesNeira/
     ├── kmeans.py
     ├── gmm.py
     ├── pca.py
+    ├── visualizacion.py
     └── cli.py
 ```
 
@@ -34,6 +35,7 @@ TFM_codigo_PraxedesNeira/
     * `kmeans.py`: experimentos con K-Means.
     * `gmm.py`: experimentos con Gaussian Mixture Models.
     * `pca.py`: experimentos basados en PCA y error de reconstrucción.
+    * `visualizacion.py`: experimento para visualizar nubes de puntos.
     * `cli.py`: definición y gestión de los argumentos de línea de comandos.
 
 Los datasets deben colocarse en sus respectivas carpetas dentro de datasets/.
@@ -163,17 +165,39 @@ Para ejecutar el escenario DoS:
 python main.py --dataset nb15 --model pca --scenario dos
 ```
 
+### Visualización de nubes de puntos mediante PCA
+
+El proyecto permite visualizar la distribución de las clases de tráfico
+mediante una reducción de dimensionalidad a dos componentes principales
+(PCA).
+
+Se utiliza el conjunto de entrenamiento previamente filtrado y escalado.
+Las visualizaciones pueden realizarse con etiquetas binarias o multiclase.
+
+Ejemplos:
+
+```bash
+python main.py --dataset ugr16 --model scatter --mode multiclass --rep 3 --fold 2
+
+python main.py --dataset nb15 --model scatter --mode multiclass --rep 1 --fold 4
+```
+
 ### Opciones de línea de comandos
 
 El programa permite seleccionar el dataset, el modelo y el escenario mediante argumentos:
 ```text
 --dataset {ugr16,nb15}
---model {iforest,kmeans,gmm,pca}
+--model {iforest,kmeans,gmm,pca,scatter}
 --scenario {full,dos}
 --mode {binary,multiclass}
 --smote
---tune-iforest
---tune-pairs N
+--tune-iforest  (solo para iforest)
+--tune-pairs N  (solo para iforest)
+--rep           (solo para scatter)
+--fold          (solo para scatter)
+--n-samples     (solo para scatter)
+--random-state  (solo para scatter)
+--no-show       (solo para scatter)
 ```
 
 No todas las opciones son aplicables a todos los modelos.

@@ -23,7 +23,7 @@ import time
 def obtener_fold_ugr16(root_path='./ugr16/', rep=1, kfold=1, clases_a_eliminar=['sshscan', 'udpscan']):
     """
     Extrae el par Train/Test para una repetición y kfold específicos,
-    reproduciendo exactamente la selección de características y la partición del artículo.
+    reproduciendo exactamente la selección de características y la partición del artículo de referencia.
     Permite eliminar clases específicas pasando una lista en 'clases_a_eliminar'.
     """
     # 1. Cargar datasets base
@@ -60,7 +60,7 @@ def obtener_fold_ugr16(root_path='./ugr16/', rep=1, kfold=1, clases_a_eliminar=[
     X_test = X.iloc[rows_test].reset_index(drop=True)
     y_test = y.iloc[rows_test].reset_index(drop=True)
 
-    # 4.5 FILTRADO DE CLASES MINORITARIAS
+    # 4.1 FILTRADO DE CLASES MINORITARIAS
     #clases_a_eliminar = ['sshscan', 'udpscan']
     if clases_a_eliminar is not None and len(clases_a_eliminar) > 0:
 
@@ -105,7 +105,7 @@ def obtener_fold_ugr16(root_path='./ugr16/', rep=1, kfold=1, clases_a_eliminar=[
 def obtener_fold_nb15(root_path='./unsw-nb15/', rep=1, kfold=1, clases_a_eliminar=None):
     """
     Extrae el par Train/Test para una repetición y kfold específicos,
-    reproduciendo exactamente la selección de características y la partición del artículo.
+    reproduciendo exactamente la selección de características y la partición del artículo de referencia.
     """
     # 1. Cargar datasets base
     df = pd.read_csv(root_path + 'unsw-nb15_multiclass.csv', sep=';')
@@ -141,7 +141,7 @@ def obtener_fold_nb15(root_path='./unsw-nb15/', rep=1, kfold=1, clases_a_elimina
     X_test = X.iloc[rows_test].reset_index(drop=True)
     y_test = y.iloc[rows_test].reset_index(drop=True)
 
-    # 4.5 FILTRADO DE CLASES MINORITARIAS
+    # 4.1 FILTRADO DE CLASES MINORITARIAS
     # clases_a_eliminar = ['exploit', 'fuzzer', 'generic']
     if clases_a_eliminar is not None and len(clases_a_eliminar) > 0:
 

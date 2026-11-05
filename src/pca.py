@@ -391,7 +391,7 @@ def run_nb15_full(data_root="datasets", results_dir="results"):
     print(f"{'CLASE':<15} | {'PRECISION':<10} | {'RECALL':<10} | {'F1-SCORE':<10}")
     print("-" * 65)
 
-    # Calcular las medias iterando sobre el diccionario (igual que en los otros scripts)
+    # Calcular las medias
     for cls in CLASSES_BIN:
         mean_prec = np.mean(class_metrics[cls]['prec'])
         mean_rec = np.mean(class_metrics[cls]['rec'])

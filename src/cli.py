@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from . import iforest, kmeans, gmm, pca
+from . import iforest, kmeans, gmm, pca, visualizacion
 
 
 EXPERIMENTS = {
@@ -33,7 +33,7 @@ EXPERIMENTS = {
 def main():
     parser = argparse.ArgumentParser(description="Reproducción de los experimentos del TFM.")
     parser.add_argument("--dataset", choices=["ugr16", "nb15"], required=True)
-    parser.add_argument("--model", choices=["iforest", "kmeans", "gmm", "pca"], required=True)
+    parser.add_argument("--model", choices=["iforest", "kmeans", "gmm", "pca", "scatter"], required=True)
     parser.add_argument("--scenario", choices=["full", "dos"], default="full")
     parser.add_argument("--mode", choices=["binary", "multiclass"], default="binary")
     parser.add_argument("--smote", action="store_true")
@@ -43,6 +43,16 @@ def main():
                         help="Ejecuta la búsqueda de hiperparámetros de Isolation Forest y termina.")
     parser.add_argument("--tune-pairs", type=int, default=10,
                         help="Número de pares repetición-fold usados en la búsqueda de Isolation Forest.")
+    parser.add_argument("--rep", type=int, default=1,
+                        help="Repetición (1-20), para la visualización de nube de puntos.")
+    parser.add_argument("--fold", type=int, default=1,
+                        help="Fold (1-5), para la visualización de nube de puntos.")
+    parser.add_argument("--n-samples", type=int, default=15000,
+                        help="Número máximo de muestras de entrenamiento que se representan en la nube de puntos.")
+    parser.add_argument("--random-state", type=int, default=42,
+                        help="Semilla para el muestreo y PCA de la visualización de la nube de puntos.")
+    parser.add_argument("--no-show", action="store_true",
+                        help="Guarda la figura de nube de puntos sin abrir una ventana gráfica.")
     args = parser.parse_args()
 
     best_params = None
@@ -65,22 +75,39 @@ def main():
         )
         print(f"\n[+] Hiperparámetros seleccionados: {best_params}")
 
-    mode = "binary_smote" if args.smote else args.mode
-    key = (args.model, args.dataset, args.scenario, mode)
-
-    if key not in EXPERIMENTS:
-        raise SystemExit("La combinación seleccionada no corresponde a un experimento del TFM.")
-
-    Path(args.results_dir).mkdir(parents=True, exist_ok=True)
-    print(f"\n[+] Dataset: {args.dataset.upper()}")
-    print(f"[+] Modelo: {args.model.upper()}")
-    print(f"[+] Escenario: {args.scenario.upper()}")
-    print(f"[+] Evaluación: {args.mode.upper()}" + (" + SMOTE" if args.smote else ""))
-
-    if best_params is not None:
-        EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir, best_params=best_params)
+    if args.model == "scatter":
+        if args.smote:
+            raise SystemExit("--smote no se utiliza en la visualización scatter.")
+        print(f"\n[+] Generando nube de puntos PCA para {args.dataset.upper()}")
+        print(f"[+] Repetición: {args.rep} | Fold: {args.fold} | Etiquetas: {args.mode}")
+        visualizacion.plot_pca_scatter(
+            dataset=args.dataset,
+            data_root=args.data_root,
+            results_dir=args.results_dir,
+            rep=args.rep,
+            kfold=args.fold,
+            mode=args.mode,
+            n_samples=args.n_samples,
+            random_state=args.random_state,
+            show=not args.no_show,
+        )
     else:
-        EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir)
+        mode = "binary_smote" if args.smote else args.mode
+        key = (args.model, args.dataset, args.scenario, mode)
+
+        if key not in EXPERIMENTS:
+            raise SystemExit("La combinación seleccionada no corresponde a un experimento del TFM.")
+
+        Path(args.results_dir).mkdir(parents=True, exist_ok=True)
+        print(f"\n[+] Dataset: {args.dataset.upper()}")
+        print(f"[+] Modelo: {args.model.upper()}")
+        print(f"[+] Escenario: {args.scenario.upper()}")
+        print(f"[+] Evaluación: {args.mode.upper()}" + (" + SMOTE" if args.smote else ""))
+
+        if args.model == "iforest":
+            EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir, best_params=best_params)
+        else:
+            EXPERIMENTS[key](data_root=args.data_root, results_dir=args.results_dir)
 
 if __name__ == "__main__":
     main()

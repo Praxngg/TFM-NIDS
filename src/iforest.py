@@ -158,7 +158,7 @@ def buscar_hiperparametros_iforest(
     print(f"[✔] F1-Score Promedio (Media de ganadores): {best_f1_promedio:.4f}")
     print("-" * 70)
 
-    # 6. Evaluación de prueba sobre Fold 1 / Rep 1
+    # 6. Evaluación de prueba sobre Fold 4 / Rep 1
     print("\n[+] Re-entrenando el modelo ganador sobre Rep 1 / Fold 4 para evaluación final rápida...")
 
     kwargs_final = {'root_path': root_path, 'rep': 1, 'kfold': 4}
@@ -176,7 +176,7 @@ def buscar_hiperparametros_iforest(
     y_pred_best_raw = best_model.predict(data_final['X_test_scaled'])
     y_pred_best = np.where(y_pred_best_raw == -1, 1, 0)
 
-    print("\n[+] Reporte de Clasificación del Mejor Modelo sobre Fold 1:")
+    print("\n[+] Reporte de Clasificación del Mejor Modelo sobre Fold 4:")
     print(classification_report(data_final['y_test_bin'], y_pred_best, target_names=['Normal (0)', 'Ataque (1)'], zero_division=0))
 
     # Calcular el ROC AUC con la función de decisión
